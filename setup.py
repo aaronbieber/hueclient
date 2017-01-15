@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="hue-client",
     version="0.1",
-    py_modules=["app"],
+    packages=["app"],
     install_requires=[
         "click",
         "requests"
