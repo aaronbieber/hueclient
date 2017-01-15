@@ -1,0 +1,7 @@
+*.pyc
+*.egg*
+.Python
+bin
+include
+lib
+pip*
