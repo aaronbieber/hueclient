@@ -67,7 +67,7 @@ def do_return(ret):
         else:
             status = "failed to update"
 
-        print("Light %s %s." % (ret[0][0], status))
+        print("Light %s %s." % (ret.keys()[0], status))
 
         if light[0] is True:
             sys.exit(0)
