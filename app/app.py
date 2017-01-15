@@ -1,5 +1,4 @@
 from urlparse import urlparse
-from pprint import pprint
 from time import sleep
 import sys
 import click
@@ -151,7 +150,7 @@ def lights(ctx, light_spec, args):
 
     elif args[0] == str(int(args[0])):
         # If it's a number...
-        pprint(hc.set_light_brightness(light_spec, args[0]))
+        hc.set_light_brightness(light_spec, args[0])
 
 
 if __name__ == '__main__':
