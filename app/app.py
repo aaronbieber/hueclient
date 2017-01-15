@@ -26,6 +26,71 @@ def context_load_config(ctx):
         return config.load(ctx.obj["conf_file"])
 
 
+def print_light_stats(stats):
+    name_width = max(len(stats[k]["name"]) for k in stats.keys())
+
+    print " ".join(val.ljust(w) for val, w in (("ID", 2),
+                                               ("NAME", name_width),
+                                               ("POWER", 5),
+                                               ("BRIGHT.", 7),
+                                               ("COLOR", 5)))
+
+    for id in stats.keys():
+        light = stats[id]
+        state = light["state"]
+        on = "on" if state["on"] is True else "off"
+        if "colormode" in state:
+            if state["colormode"] == "ct":
+                color = state["ct"]
+            elif state["hue"] > 0:
+                color = state["hue"]
+            elif state["xy"][0] > 0 or state["xy"][1] > 0:
+                color = "%s, %s" % (state["xy"][0],
+                                    state["xy"][1])
+        else:
+            color = "-"
+
+        light_data = ((id, 2),
+                      (light["name"], name_width),
+                      (on, 5),
+                      (state["bri"], 7),
+                      (color, 5))
+        print " ".join(str(val).ljust(w) for val, w in light_data)
+
+
+def do_return(ret):
+    if len(ret) == 1:
+        light = ret[ret.keys()[0]]
+
+        if light[0] is True:
+            status = "updated successfully"
+        else:
+            status = "failed to update"
+
+        print("Light %s %s." % (ret[0][0], status))
+
+        if light[0] is True:
+            sys.exit(0)
+        else:
+            sys.exit(1)
+    else:
+        print("LIGHT  RESPONSE")
+        for light_id in ret:
+            light = ret[light_id]
+
+            if light[0] is True:
+                status = "Updated successfully"
+            else:
+                status = "Failed (%s)" % light[1]
+
+            print("%s%s" % (str(light_id).ljust(7), status))
+
+        if all([el[0] for el in ret.values()]):
+            sys.exit(0)
+        else:
+            sys.exit(1)
+
+
 @main.command()
 def search():
     """Look for Hue bridges and print their IPs."""
@@ -112,45 +177,31 @@ def lights(ctx, light_spec, args):
 
     if not len(args):
         stats = hc.get_light_state(light_spec)
-        name_width = max(len(stats[k]["name"]) for k in stats.keys())
-
-        print " ".join(val.ljust(w) for val, w in (("ID", 2),
-                                                   ("NAME", name_width),
-                                                   ("POWER", 5),
-                                                   ("BRIGHT.", 7),
-                                                   ("COLOR", 5)))
-
-        for id in stats.keys():
-            light = stats[id]
-            state = light["state"]
-            on = "on" if state["on"] is True else "off"
-            if "colormode" in state:
-                if state["colormode"] == "ct":
-                    color = state["ct"]
-                elif state["hue"] > 0:
-                    color = state["hue"]
-                elif state["xy"][0] > 0 or state["xy"][1] > 0:
-                    color = "%s, %s" % (state["xy"][0],
-                                        state["xy"][1])
-            else:
-                color = "-"
-
-            light_data = ((id, 2),
-                          (light["name"], name_width),
-                          (on, 5),
-                          (state["bri"], 7),
-                          (color, 5))
-            print " ".join(str(val).ljust(w) for val, w in light_data)
+        print_light_stats(stats)
 
     elif args[0] == "on":
-        hc.set_light_power(light_spec, True)
+        do_return(hc.set_light_power(light_spec, True))
 
     elif args[0] == "off":
-        hc.set_light_power(light_spec, False)
+        do_return(hc.set_light_power(light_spec, False))
+
+    elif args[0] == "temp":
+        if len(args) < 2 or args[1] != str(int(args[1])):
+            print("The 'temp' action requires a numeric color temperature.")
+            sys.exit(1)
+
+        do_return(hc.set_light_temp(light_spec, args[1]))
+
+    elif args[0] == "hex":
+        if len(args) < 2 or len(args[1]) < 6:
+            print("The 'hex' action requires a hexadecimal color like ab33cc.")
+            sys.exit(1)
+
+        do_return(hc.set_light_hex(light_spec, args[1]))
 
     elif args[0] == str(int(args[0])):
         # If it's a number...
-        hc.set_light_brightness(light_spec, args[0])
+        do_return(hc.set_light_brightness(light_spec, args[0]))
 
 
 if __name__ == '__main__':
