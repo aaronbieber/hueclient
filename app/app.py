@@ -153,13 +153,34 @@ def register(ctx, ip):
 
 @main.command()
 @click.argument("light_spec")
-@click.argument("args", nargs=-1)
+@click.argument("args", nargs=-1, metavar="ACTION")
 @click.pass_context
 def lights(ctx, light_spec, args):
     """Get status and make changes to lights.
 
     LIGHT_SPEC is either the ID of a light, or a list of IDs separated
-    by commas, or the word 'all'."""
+    by commas, or the word 'all'.
+
+    The ACTION can be 'on', 'off', or a number to set the brightness
+    value. If no ACTION is given, the status of the specified lights
+    will be printed out.
+
+    Here are some on, off, and brightness examples:
+
+    lights all on
+    lights 5 off
+    lights 1,2,3 on
+    lights 2,4,6 150
+
+    To change the color of a light, use the action 'temp' or 'hex':
+
+    lights 1 temp 250
+    lights 5 hex 33abf0
+
+    Color temperature ranges from 153 to 500. Hex can be any
+    six-character hexadecimal color value (do not include the hash
+    symbol used in HTML; just letters and numbers, please).
+    """
 
     conf = context_load_config(ctx)
     light_spec = light_spec.lower()
