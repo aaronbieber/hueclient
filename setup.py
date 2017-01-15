@@ -6,7 +6,8 @@ setup(
     packages=["app"],
     install_requires=[
         "click",
-        "requests>=2.12"
+        "requests>=2.12",
+        "colour>=0.1.2"
     ],
     entry_points={
         "console_scripts": [

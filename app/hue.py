@@ -1,5 +1,6 @@
 import requests
 import time
+from colour import Color
 
 
 class Hue:
@@ -13,9 +14,11 @@ class Hue:
         if len(raw_response) > 0:
             try:
                 if "success" in raw_response[0].keys():
-                    return True
+                    return (True, "")
+                else:
+                    return (False, raw_response[0]["error"]["description"])
             except:
-                return False
+                return (False, "Unknown error.")
 
         return False
 
@@ -84,5 +87,26 @@ class Hue:
 
         return ret
 
-    def set_light_color(self, light_id, color):
+    def set_light_temp(self, light_id, ct):
+        ct = int(ct)
+        if ct < 153:
+            ct = 153
+
+        if ct > 500:
+            ct = 500
+
+        state = {"on": True, "ct": ct}
+        return self.set_light_state(light_id, state)
+
+    def set_light_hue(self, light_id, hue):
         pass
+
+    def set_light_hex(self, light_id, hex_color):
+        c = Color("#%s" % hex_color)
+        hue = int(c.hsl[0] * 65535)
+        sat = int(c.hsl[1] * 254)
+        state = {"on": True, "hue": hue, "sat": sat}
+        return self.set_light_state(light_id, state)
+
+    def set_light_xy(self, light_id, hue):
+        print("XY color is not yet implemented.")
