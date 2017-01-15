@@ -3,5 +3,6 @@
 .Python
 bin
 include
+build
 lib
 pip*
