@@ -136,11 +136,12 @@ def lights(ctx, light_spec, args):
             else:
                 color = "-"
 
-            print " ".join(str(val).ljust(w) for val, w in ((id, 2),
-                                                            (light["name"], name_width),
-                                                            (on, 5),
-                                                            (state["bri"], 7),
-                                                            (color, 5)))
+            light_data = ((id, 2),
+                          (light["name"], name_width),
+                          (on, 5),
+                          (state["bri"], 7),
+                          (color, 5))
+            print " ".join(str(val).ljust(w) for val, w in light_data)
 
     elif args[0] == "on":
         hc.set_light_power(light_spec, True)
