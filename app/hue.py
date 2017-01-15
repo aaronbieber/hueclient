@@ -70,7 +70,7 @@ class Hue:
         if brightness > 254:
             brightness = 254
 
-        state = {"bri": brightness}
+        state = {"on": True, "bri": brightness}
         return self.set_light_state(light_ids, state)
 
     def set_light_state(self, light_ids, state):
