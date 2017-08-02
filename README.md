@@ -3,7 +3,7 @@
 This is a very simple Philips Hue client written in Python. It is not
 significant that it's written in Python, but to the best of my knowledge the
 only other maintained command line Hue client is written in Node. So now there's
-one written in Python also.
+one written in Python.
 
 ## Installation ##
 
