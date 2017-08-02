@@ -167,6 +167,7 @@ def lights(ctx, light_spec, args):
 
     Here are some on, off, and brightness examples:
 
+    \b
     lights all on
     lights 5 off
     lights 1,2,3 on
@@ -174,6 +175,7 @@ def lights(ctx, light_spec, args):
 
     To change the color of a light, use the action 'temp' or 'hex':
 
+    \b
     lights 1 temp 250
     lights 5 hex 33abf0
 
