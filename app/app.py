@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from urlparse import urlparse
 from time import sleep
 import sys
