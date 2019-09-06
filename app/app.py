@@ -111,8 +111,6 @@ def search():
             for i in range(0, len(bridges)):
                 url = urlparse(bridges[i])
                 address = url.netloc
-                if ":" in address:
-                    address = address[:address.index(":")]
                 print("%s\t%s" % (i+1, address))
 
 
