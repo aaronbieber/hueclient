@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from urlparse import urlparse
-from time import sleep
 import sys
+from time import sleep
+from urllib.parse import urlparse
+
 import click
 import requests
 
-import ssdp
 import config
 import hue
+import ssdp
 
 
 @click.group()
@@ -30,13 +31,13 @@ def context_load_config(ctx):
 def print_light_stats(stats):
     name_width = max(len(stats[k]["name"]) for k in stats.keys())
 
-    print " ".join(val.ljust(w) for val, w in (("ID", 2),
+    print(" ".join(val.ljust(w) for val, w in (("ID", 2),
                                                ("NAME", name_width),
                                                ("POWER", 5),
                                                ("BRIGHT.", 7),
-                                               ("COLOR", 5)))
+                                               ("COLOR", 5))))
 
-    for id in stats.keys():
+    for id in stats:
         light = stats[id]
         state = light["state"]
         on = "on" if state["on"] is True else "off"
@@ -56,19 +57,19 @@ def print_light_stats(stats):
                       (on, 5),
                       (state["bri"], 7),
                       (color, 5))
-        print " ".join(str(val).ljust(w) for val, w in light_data)
+        print(" ".join(str(val).ljust(w) for val, w in light_data))
 
 
 def do_return(ret):
     if len(ret) == 1:
-        light = ret[ret.keys()[0]]
+        light = ret[list(ret)[0]]
 
         if light[0] is True:
             status = "updated successfully"
         else:
             status = "failed to update"
 
-        print("Light %s %s." % (ret.keys()[0], status))
+        print("Light %s %s." % (list(ret)[0], status))
 
         if light[0] is True:
             sys.exit(0)
