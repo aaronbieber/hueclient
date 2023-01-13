@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import sys
 from time import sleep
 from urllib.parse import urlparse
@@ -186,7 +187,13 @@ def lights(ctx, light_spec, args):
 
     conf = context_load_config(ctx)
     light_spec = light_spec.lower()
-
+    cmd = light_spec + " " + " ".join(args)
+    if not re.match("(all|\d+(,\s*\d+)*)\s+(on|off|\d+|temp\s+\d+|hex\s+[a-zA-Z0-9]+)", cmd):
+        ctx = click.get_current_context()
+        click.echo(f"Your command \"{cmd}\" had an error.")
+        click.echo(ctx.get_help())
+        ctx.exit()
+        
     hc = hue.Hue(conf["ip"], conf["username"])
 
     if light_spec == "all":
