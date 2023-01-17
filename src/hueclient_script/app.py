@@ -7,9 +7,7 @@ from urllib.parse import urlparse
 import click
 import requests
 
-import config
-import hue
-import ssdp
+from hueclient import config, hue, ssdp
 
 
 @click.group()
@@ -188,7 +186,7 @@ def lights(ctx, light_spec, args):
     conf = context_load_config(ctx)
     light_spec = light_spec.lower()
     cmd = light_spec + " " + " ".join(args)
-    if not re.match("(all|\d+(,\s*\d+)*)\s+(on|off|\d+|temp\s+\d+|hex\s+[a-zA-Z0-9]+)", cmd):
+    if not re.match("(all|\d+(,\s*\d+)*)\s+(on|off|\d+|temp\s+\d+|hex\s+[a-zA-Z0-9]+|$)", cmd):
         ctx = click.get_current_context()
         click.echo(f"Your command \"{cmd}\" had an error.")
         click.echo(ctx.get_help())

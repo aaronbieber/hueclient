@@ -1,9 +1,11 @@
 from setuptools import setup
 
 setup(
-    name="hue-client",
+    name="hueclient",
     version="0.1",
-    packages=["app"],
+    packages=['hueclient', 'hueclient_script'],
+    package_dir={'hueclient': 'src/hueclient',
+                 'hueclient_script': 'src/hueclient_script'},
     install_requires=[
         "click",
         "requests>=2.12",
@@ -11,7 +13,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "hue-client = app.app:main"
+            "hue-client = hueclient_script.app:main"
         ]
     }
 )
